@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animation.css"> <!-- Fixed here -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="img/logo.png">
+    <meta name="theme-color" content="#2563eb">
+</head>
+<body>
+    <!-- Settings button and popup -->
+    <div id="settings-container">
+        <button id="settings-btn" title="Settings">
+            <i class="fa fa-cog"></i>
+        </button>
+        <button id="reset-btn" title="Reset particles">
+            <i class="fa fa-rotate-left"></i>
+        </button>
+        <div id="settings-popup">
+            <div class="settings-header">
+                <h2>Settings</h2>
+            </div>
+            <div class="settings-part">
+                <label for="particle-speed">Particles speed</label>
+                <span id="speed-value">6</span>
+            </div>
+            <div class="slider-container">
+                <input type="range" id="particle-speed" min="1" max="15" value="6">
+            </div>
+            <div class="color-section">
+                <label for="page-custom-color" class="color-label">Page color</label>
+                <div class="color-options">
+                    <input type="radio" id="page-color-default" name="page-color" value="default" checked>
+                    <label for="page-color-default" class="color-swatch" style="background: #0f172a;" title="Dark blue"></label>
+                    <input type="radio" id="page-color-dark" name="page-color" value="dark">
+                    <label for="page-color-dark" class="color-swatch" style="background: #18181b;" title="Dark gray"></label>
+                    <input type="radio" id="page-color-solarized" name="page-color" value="solarized">
+                    <label for="page-color-solarized" class="color-swatch" style="background: #002b36;" title="Solarized"></label>
+                    <input type="radio" id="page-color-green" name="page-color" value="green">
+                    <label for="page-color-green" class="color-swatch" style="background: #1e293b;" title="Night blue"></label>
+                    <input type="radio" id="page-color-pink" name="page-color" value="pink">
+                    <label for="page-color-pink" class="color-swatch" style="background: #2d193b;" title="Purple"></label>
+                    <input type="color" id="page-custom-color" value="#22223b">
+                    <span class="custom-color-label" for="page-custom-color">Custom</span>
+                </div>
+            </div>
+            <div class="particles-section">
+                <label for="particles-custom-color" class="color-label">Particles color</label>
+                <div class="color-options" id="particles-color-options">
+                    <input type="radio" id="particles-color-white" name="particles-color" value="#ffffff" checked>
+                    <label for="particles-color-white" class="color-swatch" style="background: #fff; border:2px solid #ccc;" title="White"></label>
+                    <input type="radio" id="particles-color-blue" name="particles-color" value="#60a5fa">
+                    <label for="particles-color-blue" class="color-swatch" style="background: #60a5fa;" title="Light blue"></label>
+                    <input type="radio" id="particles-color-yellow" name="particles-color" value="#facc15">
+                    <label for="particles-color-yellow" class="color-swatch" style="background: #facc15;" title="Yellow"></label>
+                    <input type="radio" id="particles-color-pink" name="particles-color" value="#f472b6">
+                    <label for="particles-color-pink" class="color-swatch" style="background: #f472b6;" title="Pink"></label>
+                    <input type="radio" id="particles-color-green" name="particles-color" value="#4ade80">
+                    <label for="particles-color-green" class="color-swatch" style="background: #4ade80;" title="Green"></label>
+                    <input type="color" id="particles-custom-color" value="#ff00ff">
+                    <span class="custom-color-label" for="particles-custom-color">Custom</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="particles-js"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.7.1/ScrollTrigger.min.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

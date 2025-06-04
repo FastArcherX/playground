@@ -1,0 +1,503 @@
+:root {
+    --primary-color: #2563eb;    /* Blu principale */
+    --secondary-color: #3b82f6;  /* Blu secondario */
+    --accent-color: #60a5fa;     /* Blu chiaro per accenti */
+    --dark-bg: #0f172a;          /* Sfondo scuro */
+    --text-light: #ffffff;
+    --text-gray: #94a3b8;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', sans-serif;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    background: #0f172a;
+    color: #ffffff;
+    min-height: 100vh;
+    max-width: 100vw;
+    overflow-x: hidden;
+}
+
+#particles-js {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    min-width: 100vw;
+    min-height: 100vh;
+    max-width: 100vw;
+    max-height: 100vh;
+    z-index: 0;
+    pointer-events: auto !important; /* Forza l'interattività anche se altri layer la bloccano */
+}
+
+/* Rendi lo sfondo SEMPRE interattivo, anche sotto tutti gli elementi */
+#particles-js,
+#particles-js canvas {
+    pointer-events: auto !important;
+    z-index: 0 !important;
+}
+
+/* Impostazioni: contenitore in alto a sinistra */
+#settings-container {
+    position: fixed;
+    top: 18px;
+    left: 18px;
+    z-index: 10;
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+    align-items: flex-start;
+}
+
+/* Bottone impostazioni */
+#settings-btn {
+    background: var(--dark-bg);
+    color: var(--accent-color);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: background 0.2s;
+}
+#settings-btn:hover {
+    background: var(--secondary-color);
+    color: #fff;
+}
+
+/* Bottone reset */
+#reset-btn {
+    background: var(--dark-bg);
+    color: var(--accent-color);
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 1.3rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    transition: background 0.2s;
+}
+#reset-btn:hover {
+    background: var(--primary-color);
+    color: #fff;
+}
+
+/* Popup impostazioni migliorato */
+#settings-popup {
+    display: none;
+    margin-top: 10px;
+    background: rgba(20, 30, 60, 0.85);
+    color: var(--text-light);
+    border-radius: 18px;
+    border: 1.5px solid var(--primary-color);
+    box-shadow: 0 8px 32px 0 rgba(24, 60, 120, 0.22), 0 1.5px 6px 0 rgba(0,0,0,0.10);
+    padding: 28px 28px 22px 28px;
+    min-width: 250px;
+    font-size: 1.08rem;
+    position: absolute;
+    left: 0;
+    top: 52px;
+    z-index: 20;
+    opacity: 0;
+    transform: translateY(-12px) scale(0.98);
+    transition: opacity 0.22s cubic-bezier(.4,1.3,.6,1), transform 0.22s cubic-bezier(.4,1.3,.6,1);
+    box-sizing: border-box;
+    backdrop-filter: blur(12px) saturate(1.2);
+    -webkit-backdrop-filter: blur(12px) saturate(1.2);
+}
+
+/* Freccia decorativa sopra il popup */
+#settings-popup::before {
+    content: "";
+    position: absolute;
+    top: -13px;
+    left: 32px;
+    width: 0;
+    height: 0;
+    border-left: 13px solid transparent;
+    border-right: 13px solid transparent;
+    border-bottom: 13px solid rgba(20, 30, 60, 0.85);
+    filter: drop-shadow(0 -2px 2px rgba(24,60,120,0.10));
+    z-index: 21;
+}
+
+/* Mostra popup quando attivo */
+#settings-popup.active {
+    display: block;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+/* Header impostazioni con valore accanto */
+#settings-popup .settings-header {
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+}
+
+/* Header impostazioni con valore accanto */
+#settings-popup .settings-part {
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#settings-popup label {
+    font-size: 1.13em;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--primary-color);
+    text-align: left;
+    margin-bottom: 0;
+}
+
+#settings-popup #speed-value {
+    font-weight: bold;
+    color: #fff;
+    background: #e11d48;
+    font-size: 1.08em;
+    padding: 4px 13px 3px 13px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(24,60,120,0.10);
+    border: 2px solid #fff1;
+    margin-left: 16px;
+    min-width: 32px;
+    text-align: center;
+}
+
+/* Slider container */
+#settings-popup .slider-container {
+    width: 100%;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    margin-bottom: -20px;
+}
+
+/* Slider base */
+#settings-popup input[type="range"] {
+    width: 100%;
+    background: transparent;
+    height: 44px;
+    margin: 0;
+    padding: 0;
+    outline: none;
+    box-shadow: none;
+    position: relative;
+    z-index: 1;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+/* Track - Chrome/Safari/Edge */
+#settings-popup input[type="range"]::-webkit-slider-runnable-track {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #1dbae1 0%, #e85656 100%);
+    border: none;
+    margin: 0;
+}
+
+/* Thumb - Chrome/Safari/Edge */
+#settings-popup input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #3b945a;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(225,29,72,0.18);
+    cursor: pointer;
+    margin-top: -9px; /* (thumb height - track height)/2 */
+    transition: background 0.2s, border 0.2s;
+    position: relative;
+    z-index: 2;
+}
+#settings-popup input[type="range"]:hover::-webkit-slider-thumb {
+    background: #be123c;
+    border: 3px solid #f472b6;
+}
+
+/* Track - Firefox */
+#settings-popup input[type="range"]::-moz-range-track {
+    height: 6px;
+    border-radius: 3px;
+    background: linear-gradient(90deg, #e11d48 0%, #f472b6 100%);
+    border: none;
+    margin: 0;
+}
+
+/* Thumb - Firefox */
+#settings-popup input[type="range"]::-moz-range-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #e11d48;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(225,29,72,0.18);
+    cursor: pointer;
+    transition: background 0.2s, border 0.2s;
+    position: relative;
+    z-index: 2;
+}
+#settings-popup input[type="range"]:hover::-moz-range-thumb {
+    background: #be123c;
+    border: 3px solid #f472b6;
+}
+
+/* Track - IE */
+#settings-popup input[type="range"]::-ms-fill-lower,
+#settings-popup input[type="range"]::-ms-fill-upper {
+    background: linear-gradient(90deg, #e11d48 0%, #f472b6 100%);
+    border-radius: 3px;
+    border: none;
+    margin: 0;
+}
+#settings-popup input[type="range"]::-ms-thumb {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #e11d48;
+    border: 3px solid #fff;
+    box-shadow: 0 2px 8px rgba(225,29,72,0.18);
+    cursor: pointer;
+    transition: background 0.2s, border 0.2s;
+    position: relative;
+    z-index: 2;
+}
+#settings-popup input[type="range"]:hover::-ms-thumb {
+    background: #be123c;
+    border: 3px solid #f472b6;
+}
+
+/* Remove default outline and background */
+#settings-popup input[type="range"]:focus {
+    outline: none;
+    box-shadow: none;
+    border: none;
+    background: transparent;
+}
+
+/* Remove extra margin for slider in Firefox */
+#settings-popup input[type="range"] {
+    background: transparent;
+    height: 44px;
+}
+
+/* Hide ticks for all browsers */
+#settings-popup input[type="range"]::-ms-tooltip {
+    display: none;
+}
+
+/* Value */
+#settings-popup #speed-value {
+    font-weight: bold;
+    margin-left: 10px;
+    color: var(--primary-color);
+    font-size: 1.08em;
+    vertical-align: middle;
+    background: rgba(36, 99, 235, 0.08);
+    padding: 2px 8px;
+    border-radius: 8px;
+    margin-top: 2px;
+    display: inline-block;
+}
+
+#settings-popup .color-section {
+    margin-top: 22px;
+}
+
+#settings-popup .color-label {
+    font-size: 1.02em;
+    font-weight: 500;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    display: block;
+}
+
+#settings-popup .color-options {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+/* Swatch e input color: effetto hover e focus */
+#settings-popup .color-swatch,
+#settings-popup input[type="color"] {
+    transition: border 0.2s, box-shadow 0.2s, transform 0.15s;
+}
+#settings-popup .color-swatch:hover,
+#settings-popup input[type="color"]:hover {
+    border: 2.5px solid var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-color), 0 1px 8px rgba(24,60,120,0.13);
+    transform: scale(1.08);
+}
+#settings-popup input[type="color"]:focus {
+    outline: none;
+    border: 2.5px solid var(--accent-color);
+    box-shadow: 0 0 0 2px var(--accent-color), 0 1px 8px rgba(24,60,120,0.13);
+}
+
+/* Input color: rotondo, senza bordo bianco interno, il pallino è tutto del colore scelto */
+#settings-popup input[type="color"] {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(24,60,120,0.10);
+    margin-left: 8px;
+    vertical-align: middle;
+    padding: 0;
+    background: none;
+    appearance: none;
+    cursor: pointer;
+    transition: border 0.2s, box-shadow 0.2s, transform 0.15s;
+    /* Rimuove il padding interno e il bordo del color picker nativo */
+    outline: none;
+}
+
+/* Chrome, Edge, Opera */
+#settings-popup input[type="color"]::-webkit-color-swatch-wrapper {
+    padding: 0;
+    border-radius: 50%;
+}
+#settings-popup input[type="color"]::-webkit-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
+
+/* Firefox */
+#settings-popup input[type="color"]::-moz-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
+
+/* Edge/IE */
+#settings-popup input[type="color"]::-ms-color-swatch {
+    border: none;
+    border-radius: 50%;
+}
+
+/* Evidenzia input color se selezionato (custom attivo) */
+#settings-popup input[type="color"].active {
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 0 3px var(--primary-color), 0 1px 8px rgba(24,60,120,0.18);
+    transform: scale(1.12);
+}
+
+/* Label "Personalizzato" accanto all'input color: evidenzia se attivo */
+#settings-popup .custom-color-label {
+    margin-left: 4px;
+    font-size: 0.98em;
+    color: var(--text-gray);
+    font-style: italic;
+    user-select: none;
+    cursor: pointer;
+    transition: color 0.2s, font-weight 0.2s;
+}
+#settings-popup .custom-color-label.active {
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+/* Impedisci che la label della sezione attivi l'input color */
+#settings-popup .color-label {
+    pointer-events: none;
+}
+
+#settings-popup .color-swatch {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(24,60,120,0.10);
+    cursor: pointer;
+    transition: border 0.2s;
+    vertical-align: middle;
+}
+
+#settings-popup input[type="radio"] {
+    display: none;
+}
+
+#settings-popup input[type="radio"]:checked + .color-swatch {
+    border: 3px solid var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-color), 0 1px 4px rgba(24,60,120,0.10);
+}
+
+/* Migliora visibilità swatch chiara */
+#settings-popup .color-swatch[style*="#f3f4f6"] {
+    border: 2px solid #ccc;
+}
+
+#settings-popup .particles-section {
+    margin-top: 22px;
+}
+
+#settings-popup .color-swatch[style*="#fff"] {
+    border: 2px solid #ccc;
+}
+
+/* Temi dinamici */
+body.theme-default {
+    background: #0f172a;
+    color: #ffffff;
+}
+body.theme-dark {
+    background: #18181b;
+    color: #f3f4f6;
+}
+body.theme-solarized {
+    background: #002b36;
+    color: #b58900;
+}
+body.theme-green {
+    background: #1e293b;
+    color: #c7f9cc;
+}
+body.theme-pink {
+    background: #2d193b;
+    color: #f3e8ff;
+}
+
+/* Input colore custom pagina e particelle */
+#page-custom-color,
+#particles-custom-color {
+    cursor: pointer;
+    border: 2px solid #fff;
+    box-shadow: 0 1px 4px rgba(24,60,120,0.10);
+    margin-left: 6px;
+    vertical-align: middle;
+    display: inline-block;
+    padding: 0;
+}
