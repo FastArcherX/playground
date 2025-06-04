@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
         banner.id = 'cookie-banner';
         banner.innerHTML = `
             <div style="padding:14px 18px;display:flex;align-items:center;gap:18px;justify-content:space-between;">
-                <span style="font-size:1em;">This site uses technical cookies to save your color preferences. <a href="#" style="color:#60a5fa;text-decoration:underline;">Learn more</a></span>
+                <span style="font-size:1em;">This site uses cookies to save your color preferences.</span>
                 <button id="accept-cookies" style="background:#2563eb;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-weight:bold;">Accept</button>
             </div>
         `;
