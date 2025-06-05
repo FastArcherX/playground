@@ -153,6 +153,7 @@ body {
 /* Header impostazioni con valore accanto */
 #settings-popup .settings-header {
     font-size: 22px;
+    color: var(--primary-color);
     display: flex;
     align-items: center;
     justify-content: space-between;
