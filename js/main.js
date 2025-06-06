@@ -81,11 +81,13 @@ document.addEventListener('DOMContentLoaded', () => {
         observer.observe(element);
     });
 
-    // === Impostazioni: popup e controllo velocità particelle ===
+    // === Impostazioni: popup e controllo velocità e dimensione particelle ===
     const settingsBtn = document.getElementById('settings-btn');
     const settingsPopup = document.getElementById('settings-popup');
     const speedInput = document.getElementById('particle-speed');
     const speedValue = document.getElementById('speed-value');
+    const sizeInput = document.getElementById('particle-size');
+    const sizeValue = document.getElementById('size-value');
     const resetBtn = document.getElementById('reset-btn');
 
     // Mostra/nascondi popup impostazioni
@@ -102,26 +104,62 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Aggiorna valore visualizzato
+    // Aggiorna valore visualizzato e particelle per velocità
     if (speedInput && speedValue) {
         speedInput.addEventListener('input', () => {
             speedValue.textContent = speedInput.value;
-            // Aggiorna velocità particelle in tempo reale
             if (window.pJSDom && window.pJSDom[0] && window.pJSDom[0].pJS) {
                 window.pJSDom[0].pJS.particles.move.speed = Number(speedInput.value);
             }
         });
     }
 
-    // Reset particelle: velocità e numero al default
-    if (resetBtn && speedInput && speedValue) {
+    // Gestione dimensione e quantità particelle
+    if (sizeInput && sizeValue) {
+        function updateParticlesSizeAndAmount() {
+            const size = Number(sizeInput.value);
+            sizeValue.textContent = size;
+            // Quantità inversamente proporzionale alla dimensione (min 20, max 120)
+            const amount = Math.round(120 - (size - 1) * 10); // size 1 -> 120, size 10 -> 30
+            if (window.pJSDom && window.pJSDom[0] && window.pJSDom[0].pJS) {
+                const pJS = window.pJSDom[0].pJS;
+                // Aggiorna sia il valore che il valore iniziale (per refresh)
+                pJS.particles.size.value = size;
+                pJS.particles.size.anim = pJS.particles.size.anim || {};
+                pJS.particles.size.anim.size_min = size;
+                pJS.particles.size.anim.size_max = size;
+                pJS.particles.size.random = false;
+                pJS.particles.number.value = amount;
+                if (typeof pJS.fn.particlesRefresh === 'function') {
+                    pJS.fn.particlesRefresh();
+                }
+                // Aggiorna direttamente la dimensione delle particelle già disegnate
+                if (pJS.particles.array && Array.isArray(pJS.particles.array)) {
+                    pJS.particles.array.forEach(pt => {
+                        pt.radius = size;
+                        pt.radius_bubble = size;
+                        pt.radius_anim = size;
+                    });
+                }
+            }
+        }
+        sizeInput.addEventListener('input', updateParticlesSizeAndAmount);
+        // Imposta valore iniziale
+        updateParticlesSizeAndAmount();
+    }
+
+    // Reset particelle: velocità, dimensione e numero al default
+    if (resetBtn && speedInput && speedValue && sizeInput && sizeValue) {
         resetBtn.addEventListener('click', () => {
             speedInput.value = 6;
             speedValue.textContent = 6;
+            sizeInput.value = 3;
+            sizeValue.textContent = 3;
             if (window.pJSDom && window.pJSDom[0] && window.pJSDom[0].pJS) {
                 const pJS = window.pJSDom[0].pJS;
                 pJS.particles.move.speed = 6;
-                pJS.particles.number.value = 80;
+                pJS.particles.size.value = 3;
+                pJS.particles.number.value = 90;
                 if (typeof pJS.fn.particlesRefresh === 'function') {
                     pJS.fn.particlesRefresh();
                 }
@@ -266,7 +304,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Salva scelta tema pagina
     function savePageColorCookie() {
         if (!cookiesAccepted) return;
-        // Salva radio selezionato o custom
+        // Salva anche la dimensione delle particelle
         let selected = Array.from(colorRadios).find(r => r.checked);
         if (selected) {
             setCookie('page_color_radio', selected.value);
@@ -275,6 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setCookie('page_color_radio', 'custom');
             setCookie('page_custom_color', customPageInput.value);
         }
+        if (sizeInput) setCookie('particles_size', sizeInput.value);
     }
     // Salva scelta colore particelle
     function saveParticlesColorCookie() {
@@ -287,6 +326,7 @@ document.addEventListener('DOMContentLoaded', () => {
             setCookie('particles_color_radio', 'custom');
             setCookie('particles_custom_color', customColorInput.value);
         }
+        if (sizeInput) setCookie('particles_size', sizeInput.value);
     }
 
     // Aggiorna cookie su cambio colore pagina
@@ -313,7 +353,7 @@ document.addEventListener('DOMContentLoaded', () => {
         banner.id = 'cookie-banner';
         banner.innerHTML = `
             <div style="padding:14px 18px;display:flex;align-items:center;gap:18px;justify-content:space-between;">
-                <span style="font-size:1em;">This site uses cookies to save your color preferences.</span>
+                <span style="font-size:1em;">This site uses technical cookies to save your color preferences.</span>
                 <button id="accept-cookies" style="background:#2563eb;color:#fff;border:none;padding:8px 18px;border-radius:8px;cursor:pointer;font-weight:bold;">Accept</button>
             </div>
         `;
@@ -381,6 +421,14 @@ document.addEventListener('DOMContentLoaded', () => {
             customColorInput.classList.add('active');
             if (customParticlesLabel) customParticlesLabel.classList.add('active');
             customColorInput.dispatchEvent(new Event('input'));
+        }
+        // Particles size
+        const savedSize = getCookie('particles_size');
+        if (sizeInput && sizeValue && savedSize) {
+            sizeInput.value = savedSize;
+            sizeValue.textContent = savedSize;
+            if (typeof sizeInput.oninput === 'function') sizeInput.oninput();
+            else sizeInput.dispatchEvent(new Event('input'));
         }
     }
 });

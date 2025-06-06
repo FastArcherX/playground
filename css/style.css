@@ -166,6 +166,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-bottom: 6px;
 }
 
 #settings-popup label {
@@ -181,6 +182,20 @@ body {
     font-weight: bold;
     color: #fff;
     background: #e11d48;
+    font-size: 1.08em;
+    padding: 4px 13px 3px 13px;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(24,60,120,0.10);
+    border: 2px solid #fff1;
+    margin-left: 16px;
+    min-width: 32px;
+    text-align: center;
+}
+
+#settings-popup #size-value {
+    font-weight: bold;
+    color: #fff;
+    background: #2563eb;
     font-size: 1.08em;
     padding: 4px 13px 3px 13px;
     border-radius: 10px;
